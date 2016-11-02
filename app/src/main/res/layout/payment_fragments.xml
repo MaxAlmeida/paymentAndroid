@@ -1,0 +1,141 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:minWidth="700dp"
+    android:minHeight="500dp"
+    tools:context="pdvend.payment.PaymentFragments">
+
+    <RelativeLayout
+        android:id="@+id/title_payment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#89CA39">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_title"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/payment_text"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/payment_symbol"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/payment_text"
+            android:id="@+id/paymment_symbol_id" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/information"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:background="#20333f"
+        android:layout_below="@id/title_payment">
+
+        <TextView
+            android:id="@+id/remaining_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remaining_text"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="25dp"
+
+            />
+        <TextView
+            android:id="@+id/money_symbol_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/money_symbol"
+            android:textSize="25sp"
+            android:textColor="#89CA39"
+            android:layout_marginLeft="25dp"
+            android:layout_alignBaseline="@+id/remaining_value"/>
+
+        <TextView
+            android:id="@+id/remaining_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.100.00"
+            android:textSize="50sp"
+            android:textColor="#89CA39"
+            android:layout_below="@id/remaining_text"
+            android:layout_toRightOf="@id/money_symbol_remaining"/>
+
+        <TextView
+            android:id="@+id/total_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.100,000"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="25dp" />
+        <TextView
+            android:id="@+id/money_symbol_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/money_symbol"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="25dp"
+            android:layout_alignBaseline="@id/total_value"
+            android:layout_toLeftOf="@id/total_value"/>
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/payment_form"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/information">
+     
+        <EditText
+         android:id="@+id/type_payment_value"
+         android:layout_width="200dp"
+         android:layout_height="wrap_content"
+         android:text="R$0.00" android:gravity="center_horizontal"
+         android:layout_centerHorizontal="true"
+         android:inputType="numberDecimal"
+         android:layout_marginTop="25dp"/>
+        
+        <Button
+            android:id="@+id/money_payment_button"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:text="@string/money"
+            android:textColor="#FFFFFF"
+            android:background="#D8D8D8"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="90dp"/>
+
+        <Button
+            android:id="@+id/card_payment_button"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:text="@string/card"
+            android:textColor="#FFFFFF"
+            android:background="#D8D8D8"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="90dp"/>
+
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_below="@id/payment_form"></ListView>
+
+</LinearLayout>

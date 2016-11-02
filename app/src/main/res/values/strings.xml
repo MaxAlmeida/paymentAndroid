@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Payment</string>
+    <string name="payment_title"> PAGAMENTO</string>
+    <string name="remaining_text"> A PAGAR </string>
+    <string name="money_symbol"> R$ </string>
+    <string name="money"> Dinheiro</string>
+    <string name="card">Cartão</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
