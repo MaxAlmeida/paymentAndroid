@@ -115,9 +115,10 @@
             android:layout_height="40dp"
             android:text="@string/money"
             android:textColor="#FFFFFF"
-            android:background="#D8D8D8"
+            android:background="@drawable/money_button_click"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="90dp"/>
+            android:layout_marginTop="90dp"
+            android:onClick="setPaymentMoney"/>
 
         <Button
             android:id="@+id/card_payment_button"
@@ -125,10 +126,11 @@
             android:layout_height="40dp"
             android:text="@string/card"
             android:textColor="#FFFFFF"
-            android:background="#D8D8D8"
+            android:background="@drawable/card_button_click"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="90dp"/>
+            android:layout_marginTop="90dp"
+            android:onClick="setPaymentCard"/>
 
     </RelativeLayout>
     <ListView
@@ -136,6 +138,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:layout_below="@id/payment_form"></ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textStyle="bold"
+            android:background="#FFFFFF"
+            android:layout_marginLeft="200dp"/>
+
+        <Button
+            android:id="@+id/confirm_payment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:layout_alignParentRight="true"
+            android:text="OK"
+            android:textStyle="bold"
+            />
+
+    </RelativeLayout>
 
 </LinearLayout>

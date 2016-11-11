@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -57,16 +58,37 @@ public class MoneyTextWatcher implements TextWatcher {
                 // Transformamos o número que está escrito no EditText em
                 // monetário.
                 str = nf.format(Double.parseDouble(str) / 100);
+                double number = nf.parse(str).doubleValue();
+                System.out.println(str);
+                System.out.println(number);
                 typePaymentValue.setText(str);
                 typePaymentValue.setSelection(typePaymentValue.getText().length());
             } catch (NumberFormatException e) {
                 charSequence = "";
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
 
+    }
+
+    static double convertToDoubleFormat(String currencyFormat){
+        double doubleFormat = 0;
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        try {
+            doubleFormat = numberFormat.parse(currencyFormat).doubleValue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return doubleFormat;
+    }
+
+    static String formatNegative(double value){
+        NumberFormat numberFormat = new DecimalFormat("'R$'0,00");
+        return numberFormat.format(value);
     }
 
    /*
