@@ -36,8 +36,7 @@ public class MoneyTextWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-        // Evita que o método seja executado varias vezes.
-        // Se tirar ele entre em loop
+        //Prevents the method from executing multiple times.
         if (isUpdating) {
             isUpdating = false;
             return;
@@ -59,8 +58,6 @@ public class MoneyTextWatcher implements TextWatcher {
                 // monetário.
                 str = nf.format(Double.parseDouble(str) / 100);
                 double number = nf.parse(str).doubleValue();
-                System.out.println(str);
-                System.out.println(number);
                 typePaymentValue.setText(str);
                 typePaymentValue.setSelection(typePaymentValue.getText().length());
             } catch (NumberFormatException e) {
@@ -90,30 +87,4 @@ public class MoneyTextWatcher implements TextWatcher {
         NumberFormat numberFormat = new DecimalFormat("'R$'0,00");
         return numberFormat.format(value);
     }
-
-   /*
-    @Override
-    public void afterTextChanged(Editable editable) {
-        if (!editable.toString().matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
-            String userInput = "" + editable.toString().replaceAll("[^\\d]", "");
-            StringBuilder cashAmountBuilder = new StringBuilder(userInput);
-
-            while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
-                cashAmountBuilder.deleteCharAt(0);
-            }
-            while (cashAmountBuilder.length() < 3) {
-                cashAmountBuilder.insert(0, '0');
-            }
-            cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-
-            typePaymentValue.removeTextChangedListener(this);
-            typePaymentValue.setText(cashAmountBuilder.toString());
-
-            typePaymentValue.setTextKeepState("R$" + cashAmountBuilder.toString());
-            Selection.setSelection(typePaymentValue.getText(), cashAmountBuilder.toString().length() + 1);
-
-            typePaymentValue.addTextChangedListener(this);
-        }
-
-    }*/
 }
