@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/MaxAlmeida/paymentAndroid/branch/master/graph/badge.svg)](https://codecov.io/gh/MaxAlmeida/paymentAndroid)
+
+
 # PaymentFragment
 
 Esse biblioteca implementa uma tela de pagamentos que tem como finalidade proporcionar que um pagamento seja efetuado de duas maneiras : cartão e dinheiro.
