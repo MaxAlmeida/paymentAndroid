@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MoneyTextWatcher.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">pdvend.payment</a> &gt; <span class="el_source">MoneyTextWatcher.java</span></div><h1>MoneyTextWatcher.java</h1><pre class="source lang-java linenums">package pdvend.payment;
+
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
+import android.text.style.TypefaceSpan;
+import android.widget.EditText;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
+/**
+ * Created by max on 02/11/16.
+ */
+
+<span class="fc" id="L18">public class MoneyTextWatcher implements TextWatcher {</span>
+    static EditText typePaymentValue;
+<span class="fc" id="L20">    private boolean isUpdating = false;</span>
+<span class="fc" id="L21">    private NumberFormat nf = NumberFormat.getCurrencyInstance();</span>
+
+
+
+    public static MoneyTextWatcher newInstance(EditText editText)
+    {
+<span class="fc" id="L27">        MoneyTextWatcher moneyTextWatcher = new MoneyTextWatcher();</span>
+<span class="fc" id="L28">        typePaymentValue = editText;</span>
+<span class="fc" id="L29">        return moneyTextWatcher;</span>
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+<span class="fc" id="L35">    }</span>
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+        //Prevents the method from executing multiple times.
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (isUpdating) {</span>
+<span class="fc" id="L41">            isUpdating = false;</span>
+<span class="fc" id="L42">            return;</span>
+        }
+<span class="fc" id="L44">        isUpdating = true;</span>
+<span class="fc" id="L45">        String str = charSequence.toString();</span>
+            // Verifica se já existe a máscara no texto.
+<span class="pc bpc" id="L47" title="1 of 4 branches missed.">            boolean hasMask = ((str.indexOf(&quot;R$&quot;) &gt; -1 || str.indexOf(&quot;$&quot;) &gt; -1) &amp;&amp;</span>
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">                    (str.indexOf(&quot;.&quot;) &gt; -1 || str.indexOf(&quot;,&quot;) &gt; -1));</span>
+            // Verificamos se existe máscara
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            if (hasMask) {</span>
+                // Retiramos a máscara.
+<span class="fc" id="L52">                str = str.replaceAll(&quot;[R$]&quot;, &quot;&quot;).replaceAll(&quot;[,]&quot;, &quot;&quot;)</span>
+<span class="fc" id="L53">                        .replaceAll(&quot;[.]&quot;, &quot;&quot;);</span>
+            }
+
+            try {
+                // Transformamos o número que está escrito no EditText em
+                // monetário.
+<span class="fc" id="L59">                str = nf.format(Double.parseDouble(str) / 100);</span>
+<span class="fc" id="L60">                double number = nf.parse(str).doubleValue();</span>
+<span class="fc" id="L61">                typePaymentValue.setText(str);</span>
+<span class="fc" id="L62">                typePaymentValue.setSelection(typePaymentValue.getText().length());</span>
+<span class="fc" id="L63">            } catch (NumberFormatException e) {</span>
+<span class="fc" id="L64">                charSequence = &quot;&quot;;</span>
+<span class="nc" id="L65">            } catch (ParseException e) {</span>
+<span class="nc" id="L66">                e.printStackTrace();</span>
+<span class="fc" id="L67">            }</span>
+<span class="fc" id="L68">    }</span>
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+<span class="fc" id="L73">    }</span>
+
+    public static double convertToDoubleFormat(String currencyFormat){
+<span class="fc" id="L76">        double doubleFormat = 0;</span>
+<span class="fc" id="L77">        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();</span>
+        try {
+<span class="fc" id="L79">            doubleFormat = numberFormat.parse(currencyFormat).doubleValue();</span>
+<span class="nc" id="L80">        } catch (ParseException e) {</span>
+<span class="nc" id="L81">            e.printStackTrace();</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">        return doubleFormat;</span>
+    }
+
+    static String formatNegative(double value){
+<span class="nc" id="L87">        NumberFormat numberFormat = new DecimalFormat(&quot;'R$'0,00&quot;);</span>
+<span class="nc" id="L88">        return numberFormat.format(value);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span>Generated by the Android Gradle plugin 2.2.2</div></body></html>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PaymentFragments.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">pdvend.payment</a> &gt; <span class="el_source">PaymentFragments.java</span></div><h1>PaymentFragments.java</h1><pre class="source lang-java linenums">package pdvend.payment;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.app.AlertDialog;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+
+
+public class PaymentFragments extends DialogFragment {
+    private double totalValueRemain;
+    private EditText paymentValue;
+    private ListView listView;
+    private ArrayList&lt;Payment&gt; payments;
+    private PaymanetArrayAdapter paymentAdapter;
+    private Button moneyPaymentButton;
+    private Button cardPaymentButton;
+    private TextView remainingValue;
+    private TextView totalValue;
+    private NumberFormat numberFormat;
+    private TextView remainingText;
+    private TextView moneySymbol;
+    private Button confirmButton;
+    private Button cancelButton;
+
+<span class="fc" id="L39">    public PaymentFragments(){</span>
+
+<span class="fc" id="L41">    }</span>
+
+    public static PaymentFragments newInstance (double totalValue){
+<span class="fc" id="L44">        PaymentFragments paymentFragments = new PaymentFragments();</span>
+<span class="fc" id="L45">        Bundle args = new Bundle();</span>
+<span class="fc" id="L46">        args.putDouble(&quot;totalValue&quot;, totalValue);</span>
+<span class="fc" id="L47">        paymentFragments.setArguments(args);</span>
+
+<span class="fc" id="L49">        return paymentFragments;</span>
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState){
+<span class="fc" id="L54">        totalValueRemain = getArguments().getDouble(&quot;totalValue&quot;);</span>
+<span class="fc" id="L55">        System.out.println(totalValueRemain);</span>
+<span class="fc" id="L56">        numberFormat = NumberFormat.getCurrencyInstance();</span>
+
+<span class="fc" id="L58">        final Dialog dialog = new Dialog(getActivity());</span>
+<span class="fc" id="L59">        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);</span>
+<span class="fc" id="L60">        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);</span>
+<span class="fc" id="L61">        dialog.setContentView(R.layout.payment_fragments);</span>
+
+<span class="fc" id="L63">        confirmButton = (Button) dialog.findViewById(R.id.confirm_payment_button);</span>
+<span class="fc" id="L64">        cancelButton = (Button) dialog.findViewById(R.id.cancel_button);</span>
+
+<span class="fc" id="L66">        remainingText = (TextView) dialog.findViewById(R.id.remaining_text);</span>
+<span class="fc" id="L67">        moneySymbol = (TextView) dialog.findViewById(R.id.money_symbol_remaining);</span>
+
+<span class="fc" id="L69">        remainingValue = (TextView) dialog.findViewById(R.id.remaining_value);</span>
+<span class="fc" id="L70">        remainingValue.setText(numberFormat.format(totalValueRemain).toString().replace(&quot;R$&quot;,&quot;&quot;));</span>
+
+<span class="fc" id="L72">        totalValue = (TextView) dialog.findViewById(R.id.total_value);</span>
+<span class="fc" id="L73">        totalValue.setText(numberFormat.format(totalValueRemain).toString().replace(&quot;R$&quot;,&quot;&quot;));</span>
+
+<span class="fc" id="L75">        moneyPaymentButton = (Button) dialog.findViewById(R.id.money_payment_button);</span>
+<span class="fc" id="L76">        cardPaymentButton = (Button) dialog.findViewById(R.id.card_payment_button);</span>
+       // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+<span class="fc" id="L79">        paymentValue = (EditText) dialog.findViewById(R.id.type_payment_value);</span>
+<span class="fc" id="L80">        paymentValue.setText(numberFormat.format(totalValueRemain));</span>
+<span class="fc" id="L81">        paymentValue.addTextChangedListener( MoneyTextWatcher.newInstance(paymentValue));</span>
+<span class="fc" id="L82">        updateConfirmButton();</span>
+
+<span class="fc" id="L84">        final ListView listView = (ListView) dialog.findViewById(R.id.event_list);</span>
+<span class="fc" id="L85">        payments = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L86">        paymentAdapter = new PaymanetArrayAdapter(getContext(),R.layout.adapter_layout,payments);</span>
+<span class="fc" id="L87">        listView.setAdapter(paymentAdapter);</span>
+
+<span class="fc" id="L89">        moneyPaymentButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                if (totalValueRemain &gt; 0) {</span>
+<span class="fc" id="L94">                    double paymentMoneyValue = 0;</span>
+                    try {
+<span class="fc" id="L96">                        paymentMoneyValue = numberFormat.parse(paymentValue.getText().toString()).doubleValue();</span>
+<span class="nc" id="L97">                    } catch (ParseException e) {</span>
+<span class="nc" id="L98">                        e.printStackTrace();</span>
+<span class="fc" id="L99">                    }</span>
+<span class="fc" id="L100">                    String paymentType = getResources().getString(R.string.money);</span>
+<span class="fc" id="L101">                    updatePaymentRealized(paymentType,paymentMoneyValue);</span>
+<span class="fc" id="L102">                }</span>
+                else{
+<span class="fc" id="L104">                    showInvalidMessage(R.string.invalid_payment_message);</span>
+                }
+<span class="fc" id="L106">            }</span>
+        });
+<span class="fc" id="L108">        cardPaymentButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">                if(totalValueRemain &gt; 0) {</span>
+<span class="fc" id="L112">                    double paymentCardValue = 0;</span>
+                    try {
+<span class="fc" id="L114">                        paymentCardValue = numberFormat.parse(paymentValue.getText().toString()).doubleValue();</span>
+<span class="nc" id="L115">                    } catch (ParseException e) {</span>
+<span class="nc" id="L116">                        e.printStackTrace();</span>
+<span class="fc" id="L117">                    }</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                    if(paymentCardValue &gt; totalValueRemain)</span>
+<span class="fc" id="L119">                        showInvalidMessage(R.string.invalid_payment_card);</span>
+                    else {
+<span class="fc" id="L121">                        String paymentType = getResources().getString(R.string.card);</span>
+<span class="fc" id="L122">                        updatePaymentRealized(paymentType, paymentCardValue);</span>
+                    }
+
+<span class="fc" id="L125">                }</span>
+                else{
+<span class="nc" id="L127">                    showInvalidMessage(R.string.invalid_payment_message);</span>
+                }
+<span class="fc" id="L129">            }</span>
+        });
+
+<span class="fc" id="L132">        cancelButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L135">                dialog.dismiss();</span>
+<span class="nc" id="L136">            }</span>
+        });
+<span class="fc" id="L138">        confirmButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L141">                dialog.dismiss();</span>
+<span class="fc" id="L142">            }</span>
+        });
+<span class="fc" id="L144">        return dialog;</span>
+    }
+
+
+    public void updatePaymentRealized(String paymentType, double paymentValue){
+<span class="fc" id="L149">        Payment payment = new Payment(paymentType,paymentValue);</span>
+<span class="fc" id="L150">        int compare = Double.compare(paymentValue,totalValueRemain);</span>
+<span class="fc" id="L151">        payments.add(payment);</span>
+<span class="fc" id="L152">        paymentAdapter.notifyDataSetChanged();</span>
+<span class="fc" id="L153">        totalValueRemain = totalValueRemain - paymentValue;</span>
+<span class="fc" id="L154">        System.out.println(&quot;Valor Restante:&quot;);</span>
+<span class="fc" id="L155">        System.out.println(totalValueRemain);</span>
+<span class="fc" id="L156">        updateConfirmButton();</span>
+
+        //If PaymentValue is greater than totalValueRemain
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if(compare &gt; 0) {</span>
+<span class="fc" id="L160">            remainingValue.setText(numberFormat.format(Math.abs(totalValueRemain)).toString().replace(&quot;R$&quot;, &quot;&quot;));</span>
+<span class="fc" id="L161">            remainingValue.setTextColor(getResources().getColor(R.color.color_Change));</span>
+<span class="fc" id="L162">            moneySymbol.setTextColor(getResources().getColor(R.color.color_Change));</span>
+<span class="fc" id="L163">            remainingText.setText(getResources().getString(R.string.change_text));</span>
+        }
+        else
+<span class="fc" id="L166">            remainingValue.setText(numberFormat.format(totalValueRemain).toString().replace(&quot;R$&quot;, &quot;&quot;));</span>
+
+
+<span class="fc" id="L169">    }</span>
+    public void showInvalidMessage(int stringId){
+        AlertDialog.Builder alertDialog;
+<span class="fc" id="L172">        alertDialog = new AlertDialog.Builder(getContext());</span>
+<span class="fc" id="L173">        alertDialog.setTitle(R.string.invalid_payment);</span>
+<span class="fc" id="L174">        alertDialog.setMessage(stringId);</span>
+<span class="fc" id="L175">        alertDialog.setPositiveButton(&quot;Ok&quot;,null);</span>
+<span class="fc" id="L176">        alertDialog.show();</span>
+<span class="fc" id="L177">    }</span>
+
+    public void updateConfirmButton(){
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if(totalValueRemain &gt; 0)</span>
+<span class="fc" id="L181">            confirmButton.setVisibility(View.GONE);</span>
+        else
+<span class="fc" id="L183">            confirmButton.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L184">    }</span>
+
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span>Generated by the Android Gradle plugin 2.2.2</div></body></html>
