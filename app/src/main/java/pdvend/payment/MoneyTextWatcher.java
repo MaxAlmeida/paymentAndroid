@@ -75,7 +75,7 @@ public class MoneyTextWatcher implements TextWatcher {
 
     }
 
-    static double convertToDoubleFormat(String currencyFormat){
+    public static double convertToDoubleFormat(String currencyFormat){
         double doubleFormat = 0;
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
         try {

@@ -17,11 +17,15 @@ public class MainActivity extends AppCompatActivity {
         value.addTextChangedListener(MoneyTextWatcher.newInstance(value));
     }
 
+    /*
+
+
+     */
     public void btnShowDialog(View view){
         Double totalValue = MoneyTextWatcher.convertToDoubleFormat(value.getText().toString());
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentFragments payfragment =  PaymentFragments.newInstance(totalValue);
-        payfragment.show(fragmentManager,"BIRL!");
+        payfragment.show(fragmentManager,"message!");
         payfragment.setCancelable(true);
     }
 }
