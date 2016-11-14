@@ -13,6 +13,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 
+import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.getIdlingResources;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -63,8 +64,10 @@ public class PaymentFragmentTest {
         Test if value passed from mainActivity matches with TextView Elements
      */
     @Test
-    public void testMatchVTotalPaymentValueWithFragement(){
+    public void testMatchVTotalPaymentValueWithFragement() throws InterruptedException {
         onView(withId(R.id.getValue)).perform(typeText(paymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.button)).perform(click());
         onView(withId(R.id.remaining_value)).check(matches(withText(moneyFormat.toString().replace("R$",""))));
         onView(withId(R.id.total_value)).check(matches(withText(moneyFormat.toString().replace("R$",""))));
@@ -76,14 +79,18 @@ public class PaymentFragmentTest {
         Test payment realized with partial payments with diferent types (money and card)
      */
     @Test
-    public void testMatchValuesWithPartialPayment(){
+    public void testMatchValuesWithPartialPayment() throws InterruptedException {
         double remainValue = paymentValue;
         String moneyFormat;
         onView(withId(R.id.getValue)).perform(typeText(paymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.button)).perform(click());
 
         //Realizes money payment and check remain value
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(moneyPaymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.money_payment_button)).perform(click());
         remainValue = (remainValue - moneyPaymentValue);
         moneyFormat = numberFormat.format(remainValue/10).toString();
@@ -91,6 +98,8 @@ public class PaymentFragmentTest {
 
         //Realizes card payment and check remain value
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(cardPaymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.card_payment_button)).perform(click());
         remainValue = (remainValue - cardPaymentValue);
         moneyFormat = numberFormat.format(remainValue/10).toString();
@@ -118,11 +127,14 @@ public class PaymentFragmentTest {
         Test card payment with value bigger than the total value
      */
     @Test
-    public void testInvalidPaymentWithCard()
-    {
+    public void testInvalidPaymentWithCard() throws InterruptedException {
         onView(withId(R.id.getValue)).perform(typeText(paymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.button)).perform(click());
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(invalidCardPaymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.card_payment_button)).perform(click());
         onView(withText(R.string.invalid_payment_card))
                 .check(matches(isDisplayed()));
@@ -134,14 +146,19 @@ public class PaymentFragmentTest {
         Test payment when full amount has already been paid
      */
     @Test
-    public void testInvalidPayment()
-    {
+    public void testInvalidPayment() throws InterruptedException {
         Double moneyPayment = (double)2000;
         onView(withId(R.id.getValue)).perform(typeText(paymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.button)).perform(click());
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(moneyPayment.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.card_payment_button)).perform(click());
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(moneyPayment.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.money_payment_button)).perform(click());
         onView(withText(R.string.invalid_payment_message))
                 .check(matches(isDisplayed()));
@@ -151,13 +168,16 @@ public class PaymentFragmentTest {
     }
 
     @Test
-    public void testShowChange()
-    {
+    public void testShowChange() throws InterruptedException {
         Double biggerMoneyPayment = (double)3000;
         String changeValue =  numberFormat.format((biggerMoneyPayment-paymentValue)/10);
         onView(withId(R.id.getValue)).perform(typeText(paymentValue.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.button)).perform(click());
         onView(withId(R.id.type_payment_value)).perform(clearText(),typeText(biggerMoneyPayment.toString()));
+        closeSoftKeyboard();
+        Thread.sleep(1000);
         onView(withId(R.id.money_payment_button)).perform(click());
         onView(withId(R.id.remaining_text)).check(matches(withText(R.string.change_text)));
         onView(withId(R.id.remaining_value)).check(matches(withText(changeValue.toString().replace("R$",""))));
